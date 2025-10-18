@@ -22,26 +22,32 @@ class HeadStompTrait extends BossTrait
             downVel = -boss.GetAbsVelocity().z;
         else
         {
-            if (downVel >= 500 && boss.GetWaterLevel() < 2)
+            if (downVel < 500 || boss.GetWaterLevel() > 1)
             {
-                local victim = GetPropEntity(boss, "m_hGroundEntity");
-                if (!IsValidPlayer(victim))
-                    return;
-
-                custom_dmg_stomp.SetAbsOrigin(boss.GetOrigin());
-                victim.TakeDamageEx(
-                    custom_dmg_stomp,
-                    boss,
-                    boss.GetActiveWeapon(),
-                    Vector(0,0,0),
-                    boss.GetOrigin(),
-                    clamp(downVel, 500, 1500) / 7.77,
-                    1);
-
-                EmitAmbientSoundOn("Weapon_Mantreads.Impact", 8, 1, 100, victim);
-                EmitAmbientSoundOn("Player.FallDamageDealt", 4, 1, 100, victim);
-                DispatchParticleEffect("stomp_text", boss.GetOrigin(), Vector(0,0,0));
+                downVel = 0;
+                return;
             }
+
+            local victim = GetPropEntity(boss, "m_hGroundEntity");
+            if (!IsValidPlayer(victim))
+            {
+                downVel = 0;
+                return;
+            }
+
+            custom_dmg_stomp.SetAbsOrigin(boss.GetOrigin());
+            victim.TakeDamageEx(
+                custom_dmg_stomp,
+                boss,
+                boss.GetActiveWeapon(),
+                Vector(0,0,0),
+                boss.GetOrigin(),
+                clamp(downVel, 500, 1500) / 7.77,
+                1);
+
+            EmitAmbientSoundOn("Weapon_Mantreads.Impact", 8, 1, 100, victim);
+            EmitAmbientSoundOn("Player.FallDamageDealt", 4, 1, 100, victim);
+            DispatchParticleEffect("stomp_text", boss.GetOrigin(), Vector(0,0,0));
             downVel = 0;
         }
     }
