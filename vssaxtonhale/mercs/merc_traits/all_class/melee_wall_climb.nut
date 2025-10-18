@@ -30,9 +30,17 @@ function MeleeWallClimb_Hit(params)
 function MeleeWallClimb_Check(params)
 {
     local classname = params.const_entity.GetClassname();
+
+    // Make an exception for stickybombs that are stuck to a surface
+    if (classname == "tf_projectile_pipe_remote")
+        return GetPropBool(params.const_entity, "m_bTouched");
+
     foreach (entry in ignoreWallClimb)
+    {
         if (classname.find(entry) == 0)
             return false;
+    }
+
     return true;
 }
 
