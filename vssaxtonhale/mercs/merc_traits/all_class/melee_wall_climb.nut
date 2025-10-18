@@ -29,6 +29,9 @@ function MeleeWallClimb_Hit(params)
 
 function MeleeWallClimb_Check(params)
 {
+    if (params.inflictor != null && params.inflictor.IsValid() && params.inflictor.GetClassname() == "tf_projectile_ball_ornament")
+        return false;
+
     local classname = params.const_entity.GetClassname();
     foreach (entry in ignoreWallClimb)
         if (classname.find(entry) == 0)
