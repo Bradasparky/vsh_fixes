@@ -42,7 +42,9 @@ class CharacterTrait
     function OnTickAlive(timeDelta) { }
     function OnTickAliveOrDead(timeDelta) { }
     function OnDamageDealt(victim, params) { }
+    function OnDamageDealtPost(victim, params) { }
     function OnDamageTaken(attacker, params) { }
+    function OnDamageTakenPost(attacker, params) { }
     function OnKill(victim, params) { }
     function OnDeath(attacker, params) { }
     function OnHurtDealtEvent(victim, params) { }
@@ -127,15 +129,41 @@ AddListener("death", 2, function (attacker, victim, params)
 
 AddListener("damage_hook", 0, function (attacker, victim, params)
 {
-    if (attacker in characterTraits && IsValidPlayer(attacker))
+    local onDamageDealt = attacker in characterTraits && IsValidPlayer(attacker)
+    if (onDamageDealt)
         foreach (characterTrait in characterTraits[attacker])
             try { characterTrait.OnDamageDealt.call(characterTrait, victim, params); }
             catch(e) { throw e; }
 
-    if (victim in characterTraits && victim.IsPlayer())
+    local onDamageTaken = victim in characterTraits && victim.IsPlayer();
+    if (onDamageTaken)
         foreach (characterTrait in characterTraits[victim])
             try { characterTrait.OnDamageTaken.call(characterTrait, attacker, params); }
             catch(e) { throw e; }
+
+    if (params.damage == 0)
+        return;
+
+    local post_params = null;
+    if (onDamageDealt)
+    {
+        foreach (characterTrait in characterTraits[attacker])
+        {
+            post_params = params;
+            try { characterTrait.OnDamageDealtPost.call(characterTrait, victim, post_params); }
+            catch(e) { throw e; }
+        }
+    }
+
+    if (onDamageTaken)
+    {
+        foreach (characterTrait in characterTraits[victim])
+        {
+            post_params = params;
+            try { characterTrait.OnDamageTakenPost.call(characterTrait, attacker, post_params); }
+            catch(e) { throw e; }
+        }
+    }
 });
 
 AddListener("player_hurt", 0, function (attacker, victim, params)

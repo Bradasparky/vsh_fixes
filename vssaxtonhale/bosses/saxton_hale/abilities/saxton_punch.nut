@@ -22,6 +22,7 @@ PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = "sto
 class SaxtonPunchTrait extends BossTrait
 {
     meter = -30;
+    perform = true;
 
     function OnApply()
     {
@@ -54,18 +55,26 @@ class SaxtonPunchTrait extends BossTrait
             params.inflictor.SetAbsOrigin(boss.GetOrigin());
             params.damage_stats = 0;
         }
-        else if (!IsCollateralDamage(params.damage_type) && player != victim && Perform(victim))
+        else if (!IsCollateralDamage(params.damage_type) && player != victim && meter == 0)
         {
+            perform = true;
             params.inflictor = custom_dmg_saxton_punch;
             params.inflictor.SetAbsOrigin(boss.GetOrigin());
             params.damage_type = DMG_BLAST;
+            return;
         }
+
+        perform = false;
+    }
+
+    function OnDamageDealtPost(victim, params)
+    {
+        if (perform)
+            Perform()
     }
 
     function Perform(victim)
     {
-        if (meter != 0)
-            return false;
         meter -= 30;
 
         vsh_vscript.Hale_SetRedArm(boss, false);
@@ -109,7 +118,6 @@ class SaxtonPunchTrait extends BossTrait
                 deltaVector.z = 750 * pushForce;
                 target.Yeet(deltaVector);
             });
-        return true;
     }
 
     function MeterAsPercentage()
