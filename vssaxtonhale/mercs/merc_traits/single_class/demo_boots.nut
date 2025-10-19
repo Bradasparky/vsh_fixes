@@ -25,7 +25,7 @@ characterTraitsClasses.push(class extends CharacterTrait
         return false;
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         if (params.damage_type & 128)
             SetPropFloat(player, "m_Shared.m_flChargeMeter", clampCeiling(100.0, GetPropFloat(player, "m_Shared.m_flChargeMeter") + 25.0))

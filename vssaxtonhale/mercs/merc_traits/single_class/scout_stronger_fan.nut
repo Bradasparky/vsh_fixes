@@ -20,7 +20,7 @@ characterTraitsClasses.push(class extends CharacterTrait
         return player.GetPlayerClass() == TF_CLASS_SCOUT;
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         if (Time() - lastTimeApplied < 0.1 || !IsBoss(victim)
             || (!WeaponIs(params.weapon, "force_a_nature") && !WeaponIs(params.weapon, "force_a_nature_xmas")))

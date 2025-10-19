@@ -17,6 +17,8 @@ PrecacheArbitrarySound("vsh_sfx.gardened");
 
 characterTraitsClasses.push(class extends CharacterTrait
 {
+    garden = false;
+
     function CanApply()
     {
         return player.GetPlayerClass() == TF_CLASS_SOLDIER;
@@ -24,11 +26,17 @@ characterTraitsClasses.push(class extends CharacterTrait
 
     function OnDamageDealt(victim, params)
     {
-        if (player.InCond(TF_COND_BLASTJUMPING) && WeaponIs(params.weapon, "market_gardener"))
-        {
+        garden = player.InCond(TF_COND_BLASTJUMPING) && WeaponIs(params.weapon, "market_gardener");
+        if (garden)
             params.damage = vsh_vscript.CalcStabDamage(victim) / 2.5;
-            EmitSoundOn("vsh_sfx.gardened", player);
-            EmitPlayerVODelayed(player, "gardened", 0.3);
-        }
+    }
+
+    function OnDamageDealtPost(victim, params)
+    {
+        if (!garden)
+            return;
+
+        EmitSoundOn("vsh_sfx.gardened", player);
+        EmitPlayerVODelayed(player, "gardened", 0.3);
     }
 });

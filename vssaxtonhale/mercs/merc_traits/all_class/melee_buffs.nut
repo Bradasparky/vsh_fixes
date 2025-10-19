@@ -14,6 +14,8 @@
 
 characterTraitsClasses.push(class extends CharacterTrait
 {
+    applyKnockback = false
+
     function CanApply()
     {
         return player.GetPlayerClass() != TF_CLASS_SPY;
@@ -54,22 +56,22 @@ characterTraitsClasses.push(class extends CharacterTrait
 
     function OnDamageDealt(victim, params)
     {
-        if (IsBoss(victim)
-            && (params.damage_type & 128)
-            && player.InCond(TF_COND_CRITBOOSTED_ON_KILL))
-        {
+        applyKnockback = IsBoss(victim) && (params.damage_type & 128) && player.InCond(TF_COND_CRITBOOSTED_ON_KILL)
+        if (applyKnockback)
             params.damage *= 1.2; //Hale has Crit Resistance. Restoring melee damage back.
+    }
 
-            if (!victim.InCond(TF_COND_TAUNTING))
-            {
-                local deltaVector = victim.GetOrigin() - player.GetOrigin();
-                deltaVector.z = 0;
-                if (deltaVector.Norm() < 180)
-                {
-                    local force = !WeaponIs(params.weapon, "any_sword") ? 300 : 100;
-                    victim.Yeet(deltaVector * force + Vector(0, 0, force));
-                }
-            }
+    function OnDamageDealtPost(victim, params)
+    {
+        if (!applyKnockback || victim.InCond(TF_COND_TAUNTING))
+            return;
+
+        local deltaVector = victim.GetOrigin() - player.GetOrigin();
+        deltaVector.z = 0;
+        if (deltaVector.Norm() < 180)
+        {
+            local force = !WeaponIs(params.weapon, "any_sword") ? 300 : 100;
+            victim.Yeet(deltaVector * force + Vector(0, 0, force));
         }
     }
 });

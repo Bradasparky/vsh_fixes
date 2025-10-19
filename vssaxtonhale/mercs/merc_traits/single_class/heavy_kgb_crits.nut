@@ -19,7 +19,7 @@ characterTraitsClasses.push(class extends CharacterTrait
         return player.GetPlayerClass() == TF_CLASS_HEAVY;
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         if ((params.damage_type & 128) && WeaponIs(params.weapon, "kgb"))
             player.AddCondEx(TF_COND_CRITBOOSTED_ON_KILL, 5, null);

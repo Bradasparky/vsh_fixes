@@ -20,7 +20,7 @@ characterTraitsClasses.push(class extends CharacterTrait
         return playerClass == TF_CLASS_SOLDIER || playerClass == TF_CLASS_DEMOMAN;
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         if (WeaponIs(params.weapon, "half_zatoichi"))
         {

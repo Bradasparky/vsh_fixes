@@ -22,7 +22,7 @@ characterTraitsClasses.push(class extends CharacterTrait
             && WeaponIs(player.GetWeaponBySlot(TF_WEAPONSLOTS.MELEE), "candy_cane");
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         if (!(params.damage_type & 128) || vsh_vscript.totalHealthKits > 30)
             return;

@@ -229,6 +229,12 @@ class SweepingChargeTrait extends BossTrait
             });
     }
 
+    function OnDamageDealt(victim, params)
+    {
+        if (meter > 0.0 && params.inflictor != custom_dmg_charge)
+            params.damage = 0;
+    }
+
     function OnDamageTaken(attacker, params)
     {
         if (meter > 0.1)

@@ -23,7 +23,7 @@ characterTraitsClasses.push(class extends CharacterTrait
         return player.GetPlayerClass() == TF_CLASS_DEMOMAN;
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         local weapon = params.weapon;
         if (WeaponIs(weapon, "eyelander")

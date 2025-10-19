@@ -22,9 +22,12 @@ characterTraitsClasses.push(class extends CharacterTrait
     function OnDamageDealt(victim, params)
     {
         if (params.damage_custom == TF_DMG_CUSTOM_HEADSHOT)
-        {
             params.damage *= 1.2; //Hale has Crit Resistance. Making Headshots an exception.
+    }
+
+    function OnDamageDealtPost(victim, params)
+    {
+        if (params.damage_custom == TF_DMG_CUSTOM_HEADSHOT)
             AddPropInt(player, "m_Shared.m_iDecapitations", 1);
-        }
     }
 });

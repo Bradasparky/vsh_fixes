@@ -24,7 +24,7 @@ characterTraitsClasses.push(class extends CustomVoiceLine
             && WeaponIs(player.GetWeaponBySlot(TF_WEAPONSLOTS.MELEE), "fan_o_war");
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         if ((params.damage_type & 128) && Time() - lastPlay >= playInterval)
         {

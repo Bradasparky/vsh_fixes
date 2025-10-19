@@ -22,7 +22,7 @@ characterTraitsClasses.push(class extends CharacterTrait
         return player.GetPlayerClass() == TF_CLASS_SOLDIER;
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         lastHitWasAirStrike = player != victim && WeaponIs(params.weapon, "airstrike");
     }

@@ -24,7 +24,7 @@ characterTraitsClasses.push(class extends CustomVoiceLine
         return player.GetPlayerClass() == TF_CLASS_SPY;
     }
 
-    function OnDamageTaken(attacker, params)
+    function OnDamageTakenPost(attacker, params)
     {
         if (params.damage < 30 && player.GetHealth() > 50 && RandomInt(0, 2) == 0 && !player.InCond(TF_COND_STEALTHED))
             RunWithDelay2(this, 0, function()

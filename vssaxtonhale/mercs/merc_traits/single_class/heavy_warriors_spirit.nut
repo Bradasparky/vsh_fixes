@@ -20,7 +20,7 @@ characterTraitsClasses.push(class extends CharacterTrait
             && WeaponIs(player.GetWeaponBySlot(TF_WEAPONSLOTS.MELEE), "warriors_spirit");
     }
 
-    function OnDamageDealt(victim, params)
+    function OnDamageDealtPost(victim, params)
     {
         if (params.damage_type & 128 && player.GetHealth() < player.GetMaxHealth())
             player.SetHealth(clampCeiling(player.GetHealth() + 50, player.GetMaxHealth()));
