@@ -14,6 +14,8 @@
 
 characterTraitsClasses.push(class extends CharacterTrait
 {
+    launch = false;
+
     function CanApply()
     {
         return player.GetPlayerClass() == TF_CLASS_HEAVY;
@@ -21,12 +23,19 @@ characterTraitsClasses.push(class extends CharacterTrait
 
     function OnDamageTaken(attacker, params)
     {
-        if (!IsValidBoss(attacker))
+        launch = IsValidBoss(attacker);
+        if (launch)
+            params.damage_type = params.damage_type | DMG_PREVENT_PHYSICS_FORCE;
+    }
+
+    function OnDamageTakenPost(attacker, params)
+    {
+        if (!launch)
             return;
+
         local deltaVector = player.GetOrigin() - attacker.GetOrigin();
         deltaVector.z = 0;
         deltaVector.Norm();
         player.Yeet(deltaVector * 600 + Vector(0, 0, 450));
-        params.damage_type = params.damage_type | DMG_PREVENT_PHYSICS_FORCE;
     }
 });
