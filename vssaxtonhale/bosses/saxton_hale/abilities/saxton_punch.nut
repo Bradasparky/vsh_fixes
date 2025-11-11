@@ -70,7 +70,7 @@ class SaxtonPunchTrait extends BossTrait
     function OnDamageDealtPost(victim, params)
     {
         if (perform)
-            Perform()
+            Perform(victim)
     }
 
     function Perform(victim)
