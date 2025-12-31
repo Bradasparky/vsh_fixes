@@ -61,6 +61,14 @@ class SaxtonPunchTrait extends BossTrait
             params.inflictor = custom_dmg_saxton_punch;
             params.inflictor.SetAbsOrigin(boss.GetOrigin());
             params.damage_type = DMG_BLAST;
+
+            local deltaVector = victim.GetCenter() - boss.GetCenter();
+            local distance = deltaVector.Norm();
+            local damage = victim.GetMaxHealth() * (0.7 - distance / 2000);
+            if (!victim.IsPlayer())
+                damage *= 2;
+
+            params.damage += damage;
             return;
         }
 
@@ -70,13 +78,26 @@ class SaxtonPunchTrait extends BossTrait
     function OnDamageDealtPost(victim, params)
     {
         if (perform)
-            Perform(victim)
+        {
+            if (victim.IsPlayer())
+            {
+                local deltaVector = victim.GetCenter() - boss.GetCenter();
+                local distance = deltaVector.Norm();
+                local pushForce = distance < 100 ? 10 : 10 / sqrt(distance);
+                deltaVector.x = deltaVector.x * 1250 * pushForce;
+                deltaVector.y = deltaVector.y * 1250 * pushForce;
+                deltaVector.z = 750 * pushForce;
+                victim.Yeet(deltaVector);
+            }
+
+            Perform(victim);
+        }
     }
 
     function Perform(victim)
     {
         meter -= 30;
-
+        perform = false;
         vsh_vscript.Hale_SetRedArm(boss, false);
 
         local haleEyeVector = boss.EyeAngles().Forward();
@@ -92,6 +113,9 @@ class SaxtonPunchTrait extends BossTrait
 
         CreateAoE(boss.GetCenter(), 600,
             function (target, deltaVector, distance) {
+                if (target == victim)
+                    return;
+
                 local dot = haleEyeVector.Dot(deltaVector);
                 if (dot < 0.6)
                     return;
@@ -99,6 +123,7 @@ class SaxtonPunchTrait extends BossTrait
                 if (!target.IsPlayer())
                     damage *= 2;
                 custom_dmg_saxton_punch_aoe.SetAbsOrigin(boss.GetOrigin());
+
                 target.TakeDamageEx(
                     custom_dmg_saxton_punch_aoe,
                     boss,
@@ -109,6 +134,9 @@ class SaxtonPunchTrait extends BossTrait
                     DMG_BLAST);
             }
             function (target, deltaVector, distance) {
+                if (target == victim)
+                    return;
+
                 local dot = haleEyeVector.Dot(deltaVector);
                 if (dot < 0.6)
                     return;
