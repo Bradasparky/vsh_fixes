@@ -49,13 +49,14 @@ class SaxtonPunchTrait extends BossTrait
 
     function OnDamageDealt(victim, params)
     {
+        perform = false;
         if (params.damage_custom == 9)
         {
             params.inflictor = custom_dmg_hale_taunt;
             params.inflictor.SetAbsOrigin(boss.GetOrigin());
             params.damage_stats = 0;
         }
-        else if (!IsCollateralDamage(params.damage_type) && player != victim && meter == 0)
+        else if (!IsCollateralDamage(params.damage_type) && player != victim && meter == 0 && params.damage > 0 && !InSweepingCharge)
         {
             perform = true;
             params.inflictor = custom_dmg_saxton_punch;
@@ -71,8 +72,6 @@ class SaxtonPunchTrait extends BossTrait
             params.damage += damage;
             return;
         }
-
-        perform = false;
     }
 
     function OnDamageDealtPost(victim, params)

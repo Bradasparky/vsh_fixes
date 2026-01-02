@@ -26,6 +26,8 @@ PrecacheScriptSound("saxton_hale.dash_c")
 ::saxton_dash_effect_model_path <- "models/vsh/player/items/vsh_dash_effect.mdl"
 PrecacheModel(saxton_dash_effect_model_path);
 
+::InSweepingCharge <- false;
+
 class SweepingChargeTrait extends BossTrait
 {
     meter = 0;
@@ -57,6 +59,7 @@ class SweepingChargeTrait extends BossTrait
         triggerCatapult.KeyValueFromInt("solid", 2)
         triggerCatapult.KeyValueFromString("mins", "-64 -64 -96")
         triggerCatapult.KeyValueFromString("maxs", "64 64 96")
+        InSweepingCharge = false;
     }
 
     function OnTickAlive(timeDelta)
@@ -100,6 +103,7 @@ class SweepingChargeTrait extends BossTrait
 
     function WindUp()
     {
+        InSweepingCharge = true;
         meter += 0.01;
         if (meter >= 1.0)
         {
@@ -178,6 +182,7 @@ class SweepingChargeTrait extends BossTrait
         boss.AddCondEx(TF_COND_GRAPPLINGHOOK_LATCHED, 0.1, boss);
         meter = -10;
         isCurrentlyDashing = false;
+        InSweepingCharge = false;
         boss.SetGravity(1);
         EntFireByHandle(triggerCatapult, "Disable", "", 0, boss, boss)
         boss.AddCustomAttribute("no_attack", 1, 0.5);
