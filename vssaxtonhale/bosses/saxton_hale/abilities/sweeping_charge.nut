@@ -160,6 +160,7 @@ class SweepingChargeTrait extends BossTrait
         voiceTime = 0;
         midAirWindUpOverload = 0;
 
+        SetPropFloat(boss, "m_Shared.m_flChargeMeter", 100);
         boss.AddCondEx(TF_COND_SHIELD_CHARGE, chargeDuration, null);
         boss.AddCondEx(TF_COND_KNOCKED_INTO_AIR, chargeDuration, null);
         boss.AddCustomAttribute("no_attack", 1, chargeDuration + 0.5);
