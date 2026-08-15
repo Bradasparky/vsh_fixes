@@ -35,28 +35,12 @@ class SweepingChargeTrait extends BossTrait
     voiceRNG = "a";
     bashedByHale = [];
     midAirWindUpOverload = 0;
-    triggerCatapult = null;
 
     function OnApply()
     {
         if (!(player in hudAbilityInstances))
             hudAbilityInstances[player] <- [];
         hudAbilityInstances[player].push(this);
-
-        triggerCatapult = SpawnEntityFromTable("trigger_catapult", {
-            origin = "0 0 0",
-            spawnflags = 1,
-            StartDisabled = 1,
-            IsEnabled = false,
-            physicsSpeed = 300,
-            playerSpeed = 300,
-            launchDirection = "-90 270 0",
-            filtername = "filter_team_boss"
-        })
-
-        triggerCatapult.KeyValueFromInt("solid", 2)
-        triggerCatapult.KeyValueFromString("mins", "-64 -64 -96")
-        triggerCatapult.KeyValueFromString("maxs", "64 64 96")
     }
 
     function OnTickAlive(timeDelta)
@@ -146,8 +130,6 @@ class SweepingChargeTrait extends BossTrait
         local haleForwardDirection = boss.EyeAngles().Forward();
         local forwardOffset = haleForwardDirection * 60;
 
-        EntFireByHandle(triggerCatapult, "Enable", "", 0, boss, boss);
-
         BossPlayViewModelAnim(boss, "vsh_dash_loop");
 
         local chargeDuration = meter / 1.66 + 0.4;
@@ -179,7 +161,6 @@ class SweepingChargeTrait extends BossTrait
         meter = -10;
         isCurrentlyDashing = false;
         boss.SetGravity(1);
-        EntFireByHandle(triggerCatapult, "Disable", "", 0, boss, boss)
         boss.AddCustomAttribute("no_attack", 1, 0.5);
     }
 
@@ -193,7 +174,6 @@ class SweepingChargeTrait extends BossTrait
         SetPropEntity(boss, "m_hGroundEntity", null);
         local force = 1400;
         boss.SetAbsVelocity(haleForwardDirection*force)
-        triggerCatapult.SetAbsOrigin(boss.GetCenter());
 
         CreateAoEAABB(boss.GetCenter() + forwardOffset, Vector(-65, -65, -80), Vector(65, 65, 130),
             function (target, deltaVector, distance) {
